@@ -1,3 +1,2 @@
-721548769,Alex poepscu,6,3
 731876657,Alex Popescu,6,8
 712345678,Andrei Apostol,5,14
