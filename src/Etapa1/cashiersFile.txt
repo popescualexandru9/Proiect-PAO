@@ -1,0 +1,4 @@
+Steven King,2100,day
+Bruce Ernst,2200,night
+Alexander Hunold,2000,night
+Daniel Faviet,2200,day

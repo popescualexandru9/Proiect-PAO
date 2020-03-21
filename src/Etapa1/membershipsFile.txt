@@ -1,0 +1,12 @@
+Full-time,1,150,1
+Full-time,3,400,2
+Full-time,6,700,3
+Full-time,12,1200,4
+Day-time,1,120,5
+Day-time,3,350,6
+Day-time,6,600,7
+Day-time,12,1000,8
+Day-Pass,1,15,9
+Day-Pass,4,55,10
+Day-Pass,7,90,11
+Day-Pass,14,130,12
