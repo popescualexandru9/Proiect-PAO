@@ -1,4 +1,4 @@
-Guy	Himuro,3000,ACE,12
+Guy Himuro,3000,ACE,12
 Kevin Mourgos,2900,ISSA,6
 Peter Vargas,4000,ISSA,24
 John Russell,3500,ISSA,24
