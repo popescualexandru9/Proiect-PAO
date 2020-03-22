@@ -17,7 +17,7 @@ public class ActionCenter {
         this.memberships = new ArrayList<Membership>();
 
 
-        File membershipsFile = new File("C:\\Users\\Popi\\OneDrive\\Facultate\\2 year\\Sem 2\\PAO\\Proiect PAO\\src\\Etapa1\\membershipsFile.txt");
+        File membershipsFile = new File("membershipsFile.txt");
         Scanner inMemberships = new Scanner(membershipsFile);
 
         while (inMemberships.hasNextLine()) {
@@ -29,7 +29,7 @@ public class ActionCenter {
         inMemberships.close();
 
 
-        File trainersFile = new File("C:\\Users\\Popi\\OneDrive\\Facultate\\2 year\\Sem 2\\PAO\\Proiect PAO\\src\\Etapa1\\trainersFile.txt");
+        File trainersFile = new File("trainersFile.txt");
         Scanner inTrainers = new Scanner(trainersFile);
 
         while (inTrainers.hasNextLine()) {
@@ -41,7 +41,7 @@ public class ActionCenter {
         inTrainers.close();
 
 
-        File cashiersFile = new File("C:\\Users\\Popi\\OneDrive\\Facultate\\2 year\\Sem 2\\PAO\\Proiect PAO\\src\\Etapa1\\cashiersFile.txt");
+        File cashiersFile = new File("cashiersFile.txt");
         Scanner inCashiers = new Scanner(cashiersFile);
 
         while (inCashiers.hasNextLine()) {
@@ -53,7 +53,7 @@ public class ActionCenter {
         inCashiers.close();
 
 
-        File customersFile = new File("C:\\Users\\Popi\\OneDrive\\Facultate\\2 year\\Sem 2\\PAO\\Proiect PAO\\src\\Etapa1\\customersFile.txt");
+        File customersFile = new File("customersFile.txt");
         Scanner inCustomers = new Scanner(customersFile);
 
         while (inCustomers.hasNextLine()) {
@@ -286,7 +286,7 @@ public class ActionCenter {
     }
 
     private void updateCustomerFile() throws IOException {
-        BufferedWriter myWriter = new BufferedWriter(new FileWriter("C:\\Users\\Popi\\OneDrive\\Facultate\\2 year\\Sem 2\\PAO\\Proiect PAO\\src\\Etapa1\\customersFile.txt"));
+        BufferedWriter myWriter = new BufferedWriter(new FileWriter("customersFile.txt"));
         Map<String, Customer> customers = gym.getCustomers();
         for (String phoneNumber : customers.keySet()) {
             Customer customer = customers.get(phoneNumber);
