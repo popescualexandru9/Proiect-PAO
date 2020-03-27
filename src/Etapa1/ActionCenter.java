@@ -120,6 +120,12 @@ public class ActionCenter {
                 case "9":
                     displayDetails();
                     break;
+                case "@":
+                    Customer customer = searchByPhoneNumber();
+                    if (customer == null)
+                        System.out.println("We don't have this phone number registered in our data base!");
+                    customer.aboutCustomer();
+                break;
                 case "!":
                     displayContactInformation();
                     break;
@@ -149,6 +155,7 @@ public class ActionCenter {
         System.out.println("--------------------------------------------------------------|");
         System.out.println("[8] Display functional hours.                                 |");
         System.out.println("[9] Display details about the gym.                            |");
+        System.out.println("[@] Search customer by ID.                                    |");
         System.out.println("[!] Contact information.                                      |");
         System.out.println("[0] Quit                                                      |");
     }
@@ -314,6 +321,20 @@ public class ActionCenter {
         System.out.println("Contact information : \n");
         System.out.println("Email : " + gym.getMail());
         System.out.println("Phone number : " + gym.getPhoneNumber());
+    }
+    
+    private Customer searchByPhoneNumber() {
+        Scanner in = new Scanner(System.in);
+        System.out.print("Please introduce your phone number [+40 ] ");
+        String phoneNumber = in.nextLine();
+        boolean verifyNumber = verifyPhoneNumber(phoneNumber);
+        if (!verifyNumber)
+            return null;
+
+        Map<String, Customer> customers = gym.getCustomers();
+        if(customers.containsKey(phoneNumber))
+            return customers.get(phoneNumber);
+        return null;
     }
 }
 
