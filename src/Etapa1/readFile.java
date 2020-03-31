@@ -1,6 +1,9 @@
 package Etapa1.Files;
 
+import jdk.swing.interop.SwingInterOpUtils;
+
 import java.io.*;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -14,6 +17,22 @@ public class readFile {
     }
 
     private readFile() {
+    }
+
+    public void audit(String action) {
+
+        try {
+            FileWriter out = new FileWriter("C:\\Users\\Popi\\OneDrive\\Facultate\\2 year\\Sem 2\\PAO\\Proiect PAO\\src\\Etapa1\\Files\\auditFile.csv",true);
+            Instant instant = Instant.now();
+
+            out.append(action+","+instant+"\n");
+            out.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found!");
+        }
+        catch (IOException e){
+            System.out.println("IOException error!");
+        }
     }
 
     public ArrayList<String []> readFromFile(String path){
@@ -33,7 +52,7 @@ public class readFile {
             return text;
         }
         catch(FileNotFoundException e){
-            System.out.println("Error!");
+            System.out.println("File not found!");
             return null;
         }
     }
