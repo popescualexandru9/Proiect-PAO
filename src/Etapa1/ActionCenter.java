@@ -1,70 +1,61 @@
 package Etapa1;
 
+import Etapa1.Customers_and_Memberships.Customer;
+import Etapa1.Customers_and_Memberships.Membership;
+import Etapa1.Employees.Cashier;
+import Etapa1.Employees.Trainer;
+import Etapa1.Files.readFile;
+
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
-import java.io.File;
-
 
 public class ActionCenter {
+    private static ActionCenter single_instance = null;
     private ArrayList<Membership> memberships;
     private Gym gym;
 
+    public static ActionCenter getInstance() throws IOException{
+        if(single_instance == null)
+            single_instance = new ActionCenter();
+        return single_instance;
+    }
 
-    public ActionCenter() throws IOException {
+    private ActionCenter() throws IOException {
         this.gym = new Gym();
         this.memberships = new ArrayList<Membership>();
+        readFile in = readFile.getInstance();
 
 
-        File membershipsFile = new File("membershipsFile.txt");
-        Scanner inMemberships = new Scanner(membershipsFile);
-
-        while (inMemberships.hasNextLine()) {
-            String temp = inMemberships.nextLine();
-            String[] data = temp.split(",");
-            Membership membership = new Membership(data[0], Integer.valueOf(data[2]), Integer.valueOf(data[1]),Integer.valueOf(data[3]));
+        ArrayList<String []> objMembership = in.readFromFile("C:\\Users\\Popi\\OneDrive\\Facultate\\2 year\\Sem 2\\PAO\\Proiect PAO\\src\\Etapa1\\Files\\membershipsFile.csv");
+        for( String [] line : objMembership) {
+            Membership membership = new Membership(line[0], Integer.valueOf(line[2]), Integer.valueOf(line[1]), Integer.valueOf(line[3]));
             memberships.add(membership);
         }
-        inMemberships.close();
 
 
-        File trainersFile = new File("trainersFile.txt");
-        Scanner inTrainers = new Scanner(trainersFile);
-
-        while (inTrainers.hasNextLine()) {
-            String temp = inTrainers.nextLine();
-            String[] data = temp.split(",");
-            Trainer trainer = new Trainer(data[0], Float.valueOf(data[1]), data[2], Integer.valueOf(data[3]));
+        ArrayList<String []> objGym = in.readFromFile("C:\\Users\\Popi\\OneDrive\\Facultate\\2 year\\Sem 2\\PAO\\Proiect PAO\\src\\Etapa1\\Files\\trainersFile.csv");
+        for( String [] line : objGym) {
+            Trainer trainer = new Trainer(line[0], Float.valueOf(line[1]), line[2], Integer.valueOf(line[3]));
             gym.addTrainer(trainer);
-        }
-        inTrainers.close();
+         }
 
-
-        File cashiersFile = new File("cashiersFile.txt");
-        Scanner inCashiers = new Scanner(cashiersFile);
-
-        while (inCashiers.hasNextLine()) {
-            String temp = inCashiers.nextLine();
-            String[] data = temp.split(",");
-            Cashier cashier = new Cashier(data[0], Float.valueOf(data[1]), data[2]);
+        ArrayList<String []> objCashier = in.readFromFile( "C:\\Users\\Popi\\OneDrive\\Facultate\\2 year\\Sem 2\\PAO\\Proiect PAO\\src\\Etapa1\\Files\\cashiersFile.csv");
+        for( String [] line : objCashier) {
+            Cashier cashier = new Cashier(line[0], Float.valueOf(line[1]), line[2]);
             gym.addCashier(cashier);
         }
-        inCashiers.close();
 
 
-        File customersFile = new File("customersFile.txt");
-        Scanner inCustomers = new Scanner(customersFile);
-
-        while (inCustomers.hasNextLine()) {
-            String temp = inCustomers.nextLine();
-            String[] data = temp.split(",");
-            String phoneNumber = data[0];
-            Membership membership = getMembership(Integer.valueOf(data[2]));
-            Customer customer = new Customer(data[1], membership, Integer.valueOf(data[3]));
+        ArrayList<String []> objCustomers = in.readFromFile("C:\\Users\\Popi\\OneDrive\\Facultate\\2 year\\Sem 2\\PAO\\Proiect PAO\\src\\Etapa1\\Files\\customersFile.csv");
+        for( String [] line : objCustomers) {
+            String phoneNumber = line[0];
+            Membership membershipCustomer = getMembership(Integer.valueOf(line[2]));
+            Customer customer = new Customer(line[1], membershipCustomer, Integer.valueOf(line[3]));
             gym.addCustomer(phoneNumber, customer);
         }
-        inCustomers.close();
 
     }
 
@@ -121,11 +112,10 @@ public class ActionCenter {
                     displayDetails();
                     break;
                 case "@":
-                    Customer customer = searchByPhoneNumber();
-                    if (customer == null)
+                    boolean customer = searchByPhoneNumber();
+                    if (!customer)
                         System.out.println("We don't have this phone number registered in our data base!");
-                    customer.aboutCustomer();
-                break;
+                    break;
                 case "!":
                     displayContactInformation();
                     break;
@@ -155,7 +145,7 @@ public class ActionCenter {
         System.out.println("--------------------------------------------------------------|");
         System.out.println("[8] Display functional hours.                                 |");
         System.out.println("[9] Display details about the gym.                            |");
-        System.out.println("[@] Search customer by ID.                                    |");
+        System.out.println("[@] Search customer by phone number.                          |");
         System.out.println("[!] Contact information.                                      |");
         System.out.println("[0] Quit                                                      |");
     }
@@ -293,7 +283,7 @@ public class ActionCenter {
     }
 
     private void updateCustomerFile() throws IOException {
-        BufferedWriter myWriter = new BufferedWriter(new FileWriter("customersFile.txt"));
+        BufferedWriter myWriter = new BufferedWriter(new FileWriter("C:\\Users\\Popi\\OneDrive\\Facultate\\2 year\\Sem 2\\PAO\\Proiect PAO\\src\\Etapa1\\Files\\customersFile.csv"));
         Map<String, Customer> customers = gym.getCustomers();
         for (String phoneNumber : customers.keySet()) {
             Customer customer = customers.get(phoneNumber);
@@ -322,19 +312,19 @@ public class ActionCenter {
         System.out.println("Email : " + gym.getMail());
         System.out.println("Phone number : " + gym.getPhoneNumber());
     }
-    
-    private Customer searchByPhoneNumber() {
+
+    private boolean searchByPhoneNumber() {
         Scanner in = new Scanner(System.in);
         System.out.print("Please introduce your phone number [+40 ] ");
         String phoneNumber = in.nextLine();
         boolean verifyNumber = verifyPhoneNumber(phoneNumber);
         if (!verifyNumber)
-            return null;
+            return false;
 
         Map<String, Customer> customers = gym.getCustomers();
         if(customers.containsKey(phoneNumber))
-            return customers.get(phoneNumber);
-        return null;
+            customers.get(phoneNumber).aboutCustomer();
+        return true;
     }
 }
 
