@@ -62,7 +62,9 @@ public class ActionCenter {
     public void Menu() {
         System.out.println("\nWelcome!");
         Scanner in = new Scanner(System.in);
+        readFile auditOut = readFile.getInstance();
         boolean input = true;
+
         displayMenu();
         do {
             System.out.println("\n--------------------------------------------------------------|");
@@ -73,15 +75,19 @@ public class ActionCenter {
             switch (choice.trim()) {
                 case "1":
                     displaySortedTrainersByExperience();
+                    auditOut.audit("Display all the personal trainers.");
                     break;
                 case "2":
                     displayCashiers();
+                    auditOut.audit("Display all the cashiers.");
                     break;
                 case "3":
                     displayMemberships();
+                    auditOut.audit("Display all the memberships.");
                     break;
                 case "4":
                     displayCustomers();
+                    auditOut.audit("Display all the members.");
                     break;
                 case "5":
                     try {
@@ -91,44 +97,56 @@ public class ActionCenter {
                     } catch (IOException ex) {
                         System.out.println("IO Exception.");
                     }
+                    auditOut.audit("Adding a new member.");
                     break;
                 case "6":
                     boolean ok = existingCustomer();
                     if (!ok)
                         System.out.println("Error! We couldn't renew your membership.");
+                    auditOut.audit("Renew a subscription.");
                     break;
                 case "7":
                     try {
                         updateCustomerFile();
                         System.out.println("The file has been updated successfully.");
                     }catch (IOException ex){
-                        System.out.println("IO Exception. We couldnt't update the file.");
+                        System.out.println("IO Exception. We couldn't update the file.");
                     }
+                    auditOut.audit("Update members file");
                     break;
                 case "8":
                     displayHours();
+                    auditOut.audit("Display functional hours.");
                     break;
                 case "9":
                     displayDetails();
+                    auditOut.audit("Display details about the gym.");
                     break;
                 case "@":
                     boolean customer = searchByPhoneNumber();
                     if (!customer)
                         System.out.println("We don't have this phone number registered in our data base!");
+                    auditOut.audit("Search customer by phone number");
                     break;
                 case "!":
                     displayContactInformation();
+                    auditOut.audit("Display contact information.");
                     break;
                 case "0":
                     System.out.println("\nHave a nice day!");
                     input = false;
+                    auditOut.audit("Quit applicattion.");
                     break;
                 case "?":
                     displayMenu();
+                    auditOut.audit("Display menu.");
                     break;
                 default:
-                    System.out.println("Error! Make sure you picked a number between 1 and 10.");
+                    System.out.println("Error! Make sure your input is correct.");
+                    auditOut.audit("Picked wrong input.");
             }
+
+
         } while (input);
     }
 
@@ -137,7 +155,7 @@ public class ActionCenter {
         System.out.println("[1] Display all the personal trainers ordered by experience.  |");
         System.out.println("[2] Display all the cashiers.                                 |");
         System.out.println("[3] Display all the memberships available.                    |");
-        System.out.println("[4] Display all the members                                   |");
+        System.out.println("[4] Display all the members.                                  |");
         System.out.println("--------------------------------------------------------------|");
         System.out.println("[5]                    Become a member!                       |");
         System.out.println("[6]                Renew your subscription.                   |");
