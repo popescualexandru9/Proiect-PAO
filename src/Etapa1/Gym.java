@@ -8,8 +8,8 @@ public class Gym {
     private static final String address = "814 SUMMER PARK DR. STAFFORD";
     private static final String mail = "support@alphaleteathletics.com";
     private static final String phoneNumber = "0731876657";
-    private ArrayList<Cashier> cashiers;
-    private ArrayList<Trainer> trainers ;
+    private List<Cashier> cashiers;
+    private List<Trainer> trainers ;
     private Map<String,Customer> customers = new HashMap<String,Customer>();;
 
     public Gym() {
@@ -38,11 +38,11 @@ public class Gym {
         return phoneNumber;
     }
 
-    public ArrayList<Cashier> getCashiers() {
+    public List<Cashier> getCashiers() {
         return cashiers;
     }
 
-    public ArrayList<Trainer> getTrainers() {
+    public List<Trainer> getTrainers() {
         return trainers;
     }
 
