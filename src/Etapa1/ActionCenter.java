@@ -14,7 +14,7 @@ import java.util.*;
 
 public class ActionCenter {
     private static ActionCenter single_instance = null;
-    private ArrayList<Membership> memberships;
+    private List<Membership> memberships;
     private Gym gym;
 
     public static ActionCenter getInstance() throws IOException{
@@ -29,27 +29,27 @@ public class ActionCenter {
         readFile in = readFile.getInstance();
 
 
-        ArrayList<String []> objMembership = in.readFromFile("C:\\Users\\Popi\\OneDrive\\Facultate\\2 year\\Sem 2\\PAO\\Proiect PAO\\src\\Etapa1\\Files\\membershipsFile.csv");
+        List<String []> objMembership = in.readFromFile("C:\\Users\\Popi\\OneDrive\\Facultate\\2 year\\Sem 2\\PAO\\Proiect PAO\\src\\Etapa1\\Files\\membershipsFile.csv");
         for( String [] line : objMembership) {
             Membership membership = new Membership(line[0], Integer.valueOf(line[2]), Integer.valueOf(line[1]), Integer.valueOf(line[3]));
             memberships.add(membership);
         }
 
 
-        ArrayList<String []> objGym = in.readFromFile("C:\\Users\\Popi\\OneDrive\\Facultate\\2 year\\Sem 2\\PAO\\Proiect PAO\\src\\Etapa1\\Files\\trainersFile.csv");
+        List<String []> objGym = in.readFromFile("C:\\Users\\Popi\\OneDrive\\Facultate\\2 year\\Sem 2\\PAO\\Proiect PAO\\src\\Etapa1\\Files\\trainersFile.csv");
         for( String [] line : objGym) {
             Trainer trainer = new Trainer(line[0], Float.valueOf(line[1]), line[2], Integer.valueOf(line[3]));
             gym.addTrainer(trainer);
          }
 
-        ArrayList<String []> objCashier = in.readFromFile( "C:\\Users\\Popi\\OneDrive\\Facultate\\2 year\\Sem 2\\PAO\\Proiect PAO\\src\\Etapa1\\Files\\cashiersFile.csv");
+        List<String []> objCashier = in.readFromFile( "C:\\Users\\Popi\\OneDrive\\Facultate\\2 year\\Sem 2\\PAO\\Proiect PAO\\src\\Etapa1\\Files\\cashiersFile.csv");
         for( String [] line : objCashier) {
             Cashier cashier = new Cashier(line[0], Float.valueOf(line[1]), line[2]);
             gym.addCashier(cashier);
         }
 
 
-        ArrayList<String []> objCustomers = in.readFromFile("C:\\Users\\Popi\\OneDrive\\Facultate\\2 year\\Sem 2\\PAO\\Proiect PAO\\src\\Etapa1\\Files\\customersFile.csv");
+        List<String []> objCustomers = in.readFromFile("C:\\Users\\Popi\\OneDrive\\Facultate\\2 year\\Sem 2\\PAO\\Proiect PAO\\src\\Etapa1\\Files\\customersFile.csv");
         for( String [] line : objCustomers) {
             String phoneNumber = line[0];
             Membership membershipCustomer = getMembership(Integer.valueOf(line[2]));
@@ -274,7 +274,7 @@ public class ActionCenter {
 
     private void displaySortedTrainersByExperience() {
         System.out.println("Employees - Personal Trainers\n");
-        ArrayList<Trainer> trainers = gym.getTrainers();
+        List<Trainer> trainers = gym.getTrainers();
         Collections.sort(trainers, new Comparator<Trainer>() {
             public int compare(Trainer o1, Trainer o2) {
                 return Float.compare(o2.getExperience(), o1.getExperience());
@@ -340,9 +340,11 @@ public class ActionCenter {
             return false;
 
         Map<String, Customer> customers = gym.getCustomers();
-        if(customers.containsKey(phoneNumber))
+        if(customers.containsKey(phoneNumber)){
             customers.get(phoneNumber).aboutCustomer();
-        return true;
+            return true;
+            }
+        return false;
     }
 }
 
