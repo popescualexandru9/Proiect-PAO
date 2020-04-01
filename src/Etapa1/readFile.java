@@ -1,7 +1,5 @@
 package Etapa1.Files;
 
-import jdk.swing.interop.SwingInterOpUtils;
-
 import java.io.*;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -35,12 +33,12 @@ public class readFile {
         }
     }
 
-    public ArrayList<String []> readFromFile(String path){
+    public List<String []> readFromFile(String path){
 
         try {
             File file = new File(path);
             Scanner in = new Scanner(file);
-            ArrayList <String []> text= new ArrayList<String[]>();
+            List <String []> text= new ArrayList<String[]>();
             while(in.hasNextLine())
             {
                 String temp = in.nextLine();
