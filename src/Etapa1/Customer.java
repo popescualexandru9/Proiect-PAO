@@ -1,4 +1,4 @@
-package Etapa1;
+package Etapa1.Customers_and_Memberships;
 
 public class Customer {
     private String name;
@@ -34,5 +34,14 @@ public class Customer {
 
     public int getMembershipId(){
         return this.membership.getId();
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "name='" + name + '\'' +
+                ", membership=" + membership +
+                ", fidelity=" + fidelity +
+                '}';
     }
 }
