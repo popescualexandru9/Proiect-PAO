@@ -1,8 +1,6 @@
-package Etapa1;
+package Etapa1.Customers_and_Memberships;
 
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
-
 
 public class Membership {
     private static DecimalFormat df2 = new DecimalFormat("#.##");
@@ -23,10 +21,6 @@ public class Membership {
             this.type = "days";
         else
             this.type = "months";
-    }
-
-    public Membership(){
-
     }
 
     public void aboutMembership(){
