@@ -38,7 +38,7 @@ public class readFile {
         try {
             File file = new File(path);
             Scanner in = new Scanner(file);
-            List <String []> text= new ArrayList<String[]>();
+            List <String []> text= new ArrayList<>();
             while(in.hasNextLine())
             {
                 String temp = in.nextLine();
