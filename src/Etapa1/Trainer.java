@@ -1,4 +1,4 @@
-package Etapa1;
+package Etapa1.Employees;
 
 public class Trainer extends Employees {
     private String certificate;
