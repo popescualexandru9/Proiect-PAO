@@ -1,4 +1,4 @@
-package Etapa1;
+package Etapa1.Employees;
 
 public class Employees {
     private static int numberEmployees=1;
@@ -7,7 +7,7 @@ public class Employees {
     private String function;
     private float salary;
 
-    public Employees(String name, String function, float salary) {
+    Employees(String name, String function, float salary) {
         this.id = numberEmployees;
         this.name = name;
         this.function = function;
@@ -15,20 +15,16 @@ public class Employees {
         numberEmployees+=1;
     }
 
-    protected void aboutEmployee(){
-        System.out.println("This is an employee. This method will be overridden");;
+    public void aboutEmployee(){
+        System.out.println("This is an employee. This method will be overridden");
     }
 
-    public String getName() {
+    String getName() {
         return name;
     }
 
-    public String getFunction() {
+    String getFunction() {
         return function;
-    }
-
-    public float getSalary() {
-        return salary;
     }
 
 }
