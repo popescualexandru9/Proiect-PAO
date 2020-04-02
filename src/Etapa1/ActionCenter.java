@@ -12,7 +12,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
-public class ActionCenter {
+class ActionCenter {
     private static ActionCenter single_instance = null;
     private List<Membership> memberships;
     private Gym gym;
@@ -59,7 +59,7 @@ public class ActionCenter {
 
     }
 
-    public void Menu() {
+    void Menu() {
         System.out.println("\nWelcome!");
         Scanner in = new Scanner(System.in);
         readFile auditOut = readFile.getInstance();
