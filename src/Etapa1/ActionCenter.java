@@ -275,11 +275,7 @@ class ActionCenter {
     private void displaySortedTrainersByExperience() {
         System.out.println("Employees - Personal Trainers\n");
         List<Trainer> trainers = gym.getTrainers();
-        Collections.sort(trainers, new Comparator<Trainer>() {
-            public int compare(Trainer o1, Trainer o2) {
-                return Float.compare(o2.getExperience(), o1.getExperience());
-            }
-        });
+        Collections.sort(trainers, (Trainer t1, Trainer t2) -> Float.compare(t2.getExperience(), t1.getExperience()) );
         for (Trainer elem : trainers)
             elem.aboutEmployee();
     }
