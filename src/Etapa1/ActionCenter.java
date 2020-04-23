@@ -16,6 +16,7 @@ class ActionCenter {
     private static ActionCenter single_instance = null;
     private List<Membership> memberships;
     private Gym gym;
+    private static final String path = "C:\\Users\\Popi\\OneDrive\\Facultate\\2 year\\Sem 2\\PAO\\Proiect PAO\\src\\Etapa1\\Files\\";
 
     public static ActionCenter getInstance() throws IOException{
         if(single_instance == null)
@@ -29,27 +30,27 @@ class ActionCenter {
         readFile in = readFile.getInstance();
 
 
-        List<String []> objMembership = in.readFromFile("C:\\Users\\Popi\\OneDrive\\Facultate\\2 year\\Sem 2\\PAO\\Proiect PAO\\src\\Etapa1\\Files\\membershipsFile.csv");
+        List<String []> objMembership = in.readFromFile(path+"membershipsFile.csv");
         for( String [] line : objMembership) {
             Membership membership = new Membership(line[0], Integer.valueOf(line[2]), Integer.valueOf(line[1]), Integer.valueOf(line[3]));
             memberships.add(membership);
         }
 
 
-        List<String []> objGym = in.readFromFile("C:\\Users\\Popi\\OneDrive\\Facultate\\2 year\\Sem 2\\PAO\\Proiect PAO\\src\\Etapa1\\Files\\trainersFile.csv");
+        List<String []> objGym = in.readFromFile(path+"trainersFile.csv");
         for( String [] line : objGym) {
             Trainer trainer = new Trainer(line[0], Float.valueOf(line[1]), line[2], Integer.valueOf(line[3]));
             gym.addTrainer(trainer);
          }
 
-        List<String []> objCashier = in.readFromFile( "C:\\Users\\Popi\\OneDrive\\Facultate\\2 year\\Sem 2\\PAO\\Proiect PAO\\src\\Etapa1\\Files\\cashiersFile.csv");
+        List<String []> objCashier = in.readFromFile( path+"cashiersFile.csv");
         for( String [] line : objCashier) {
             Cashier cashier = new Cashier(line[0], Float.valueOf(line[1]), line[2]);
             gym.addCashier(cashier);
         }
 
 
-        List<String []> objCustomers = in.readFromFile("C:\\Users\\Popi\\OneDrive\\Facultate\\2 year\\Sem 2\\PAO\\Proiect PAO\\src\\Etapa1\\Files\\customersFile.csv");
+        List<String []> objCustomers = in.readFromFile(path+"customersFile.csv");
         for( String [] line : objCustomers) {
             String phoneNumber = line[0];
             Membership membershipCustomer = getMembership(Integer.valueOf(line[2]));
@@ -297,7 +298,7 @@ class ActionCenter {
     }
 
     private void updateCustomerFile() throws IOException {
-        BufferedWriter myWriter = new BufferedWriter(new FileWriter("C:\\Users\\Popi\\OneDrive\\Facultate\\2 year\\Sem 2\\PAO\\Proiect PAO\\src\\Etapa1\\Files\\customersFile.csv"));
+        BufferedWriter myWriter = new BufferedWriter(new FileWriter(path+"customersFile.csv"));
         Map<String, Customer> customers = gym.getCustomers();
         for (String phoneNumber : customers.keySet()) {
             Customer customer = customers.get(phoneNumber);
