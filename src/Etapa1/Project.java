@@ -1,15 +1,16 @@
 package Etapa1;
 
-import java.io.IOException;
 
 public class Project {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
-        ActionCenter services = new ActionCenter();
-        services.Menu();
-
+        Runnable services = ActionCenter.getInstance();
+        Thread thread = new Thread(services);
+        thread.setName("menu");
+        thread.start();
     }
 }
+
 
 
 /*
