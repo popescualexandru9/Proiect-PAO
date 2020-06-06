@@ -4,53 +4,52 @@ import Etapa1.Customers_and_Memberships.Customer;
 import Etapa1.Customers_and_Memberships.Membership;
 import Etapa1.Employees.Cashier;
 import Etapa1.Employees.Trainer;
-import Etapa1.Files.readFile;
+import Etapa1.Files.ReadFile;
 
-
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.sql.*;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
-class ActionCenter {
+class ActionCenter implements Runnable{
     private static ActionCenter single_instance = null;
     private List<Membership> memberships;
     private Gym gym;
-    private static final String path = "C:\\Users\\Popi\\OneDrive\\Facultate\\2 year\\Sem 2\\PAO\\Proiect PAO\\src\\Etapa1\\Files\\";
+    private static final String url = "jdbc:mysql://localhost:3306/laboratorpao";
+    private static final String path = "C:\\Users\\Popi\\OneDrive\\Facultate\\Sem 2\\PAO\\Proiect PAO\\src\\Etapa1\\Files\\";
 
-    public static ActionCenter getInstance() throws IOException{
+    static ActionCenter getInstance() {
         if(single_instance == null)
             single_instance = new ActionCenter();
         return single_instance;
     }
 
-    private ActionCenter() throws IOException {
+    private ActionCenter()  {
         this.gym = new Gym();
-        this.memberships = new ArrayList<Membership>();
-        readFile in = readFile.getInstance();
+        this.memberships = new ArrayList<>();
+        ReadFile in = ReadFile.getInstance();
 
 
-        List<String []> objMembership = in.readFromFile(path+"membershipsFile.csv");
+        List<String []> objMembership = in.readFromFile("membership");
         for( String [] line : objMembership) {
-            Membership membership = new Membership(line[0], Integer.valueOf(line[2]), Integer.valueOf(line[1]), Integer.valueOf(line[3]));
+            Membership membership = new Membership(line[0], Double.valueOf(line[2]), Integer.valueOf(line[1]), Integer.valueOf(line[3]));
             memberships.add(membership);
         }
 
 
-        List<String []> objGym = in.readFromFile(path+"trainersFile.csv");
+        List<String []> objGym = in.readFromFile("trainer");
         for( String [] line : objGym) {
             Trainer trainer = new Trainer(line[0], Float.valueOf(line[1]), line[2], Integer.valueOf(line[3]));
             gym.addTrainer(trainer);
          }
 
-        List<String []> objCashier = in.readFromFile( path+"cashiersFile.csv");
+        List<String []> objCashier = in.readFromFile( "cashier");
         for( String [] line : objCashier) {
             Cashier cashier = new Cashier(line[0], Float.valueOf(line[1]), line[2]);
             gym.addCashier(cashier);
         }
 
 
-        List<String []> objCustomers = in.readFromFile(path+"customersFile.csv");
+        List<String []> objCustomers = in.readFromFile("customer");
         for( String [] line : objCustomers) {
             String phoneNumber = line[0];
             Membership membershipCustomer = getMembership(Integer.valueOf(line[2]));
@@ -60,14 +59,22 @@ class ActionCenter {
 
     }
 
-    void Menu() {
+    @Override
+    public void run() {
         System.out.println("\nWelcome!");
         Scanner in = new Scanner(System.in);
-        readFile auditOut = readFile.getInstance();
+        ReadFile auditOut = ReadFile.getInstance();
         boolean input = true;
 
         displayMenu();
         do {
+            try{
+                TimeUnit.SECONDS.sleep(1);
+            }
+            catch(InterruptedException ex)
+            {
+                Thread.currentThread().interrupt();
+            }
             System.out.println("\n--------------------------------------------------------------|");
             System.out.println("Note that you can visualize the menu again by picking '?'. ");
             System.out.print("Please pick a number : ");
@@ -91,28 +98,20 @@ class ActionCenter {
                     auditOut.audit("Display all the members.");
                     break;
                 case "5":
-                    try {
-                        boolean ok = newCustomer();
-                        if (!ok)
-                            System.out.println("Error! We couldn't add the new customer.");
-                    } catch (IOException ex) {
-                        System.out.println("IO Exception.");
-                    }
+                    boolean ok = newCustomer();
+                    if (!ok)
+                        System.out.println("Error! We couldn't add the new customer.");
                     auditOut.audit("Adding a new member.");
                     break;
                 case "6":
-                    boolean ok = existingCustomer();
-                    if (!ok)
+                    boolean okk = existingCustomer();
+                    if (!okk)
                         System.out.println("Error! We couldn't renew your membership.");
                     auditOut.audit("Renew a subscription.");
                     break;
                 case "7":
-                    try {
-                        updateCustomerFile();
-                        System.out.println("The file has been updated successfully.");
-                    }catch (IOException ex){
-                        System.out.println("IO Exception. We couldn't update the file.");
-                    }
+                    updateCustomerFile();
+                    System.out.println("The file has been updated successfully.");
                     auditOut.audit("Update members file");
                     break;
                 case "8":
@@ -146,8 +145,7 @@ class ActionCenter {
                     System.out.println("Error! Make sure your input is correct.");
                     auditOut.audit("Picked wrong input.");
             }
-
-
+            
         } while (input);
     }
 
@@ -196,7 +194,7 @@ class ActionCenter {
         }
     }
 
-    private boolean newCustomer() throws IOException {
+    private boolean newCustomer() {
         Scanner in = new Scanner(System.in);
         System.out.println("\nHello! I'm glad you want to be a member of our gym. Please introduce your -->");
         System.out.print("Full name: ");
@@ -297,18 +295,37 @@ class ActionCenter {
         }
     }
 
-    private void updateCustomerFile() throws IOException {
-        BufferedWriter myWriter = new BufferedWriter(new FileWriter(path+"customersFile.csv"));
+    private void updateCustomerFile()  {
         Map<String, Customer> customers = gym.getCustomers();
         for (String phoneNumber : customers.keySet()) {
             Customer customer = customers.get(phoneNumber);
-            String toWrite = phoneNumber + "," + customer.getName() + "," + customer.getMembershipId() + "," + customer.getFidelity();
 
-            myWriter.write(toWrite);
-            myWriter.newLine();
+            try (Connection connection = DriverManager.getConnection(url, "root", "");
+                 Statement statement = connection.createStatement()){
+                 ResultSet resultset = statement.executeQuery("Select * from laboratorpao.customer");
+                 boolean found = false;
+
+                 while (resultset.next()) {
+                     if (phoneNumber.equals(resultset.getString("phoneNr"))){
+                         found=true;
+                         break;}
+                 }
+
+                 if(found) {
+                     String query = "Update laboratorpao.customer set membership='" + customer.getMembershipId() +"' ,fidelity='" + customer.getFidelity() + "' where (phoneNr ='" + phoneNumber +"');";
+                     statement.executeUpdate(query);
+                 }
+                 else {
+                     String query = "INSERT INTO laboratorpao.customer values('" + phoneNumber + "','" + customer.getName() + "','" + customer.getMembershipId() + "','" + customer.getFidelity() + "');";
+                     statement.executeUpdate(query);
+                 }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
         }
-        myWriter.close();
-    }
+ }
 
     private void displayHours(){
         System.out.println("Hours : \n");
@@ -337,11 +354,12 @@ class ActionCenter {
             return false;
 
         Map<String, Customer> customers = gym.getCustomers();
-        if(customers.containsKey(phoneNumber)){
+        if (customers.containsKey(phoneNumber)){
             customers.get(phoneNumber).aboutCustomer();
-            return true;
-            }
+        return true;
+        }
         return false;
     }
-}
 
+
+}
